@@ -17,8 +17,8 @@ func init() {
 	tugou.SetProxy("socks5://127.0.0.1:17890")
 	if !tugou.CheckLogin() {
 		resp := tugou.Login(bbinWails.TuGouAccountInfo{
-			Username:    "luoxk123",
-			Password:    "1Q2w3e4r",
+			Username:    "yingfeng001",
+			Password:    "xx123456",
 			CaptchaCode: "",
 			RealName:    "",
 		})
@@ -31,10 +31,13 @@ func init() {
 	}
 
 	tugou.SetSport(bc)
-	tugou.GetSport().Login(nil)
+	err := tugou.GetSport().Login(nil)
+	if err != nil {
+		panic(err)
+	}
 }
 
-func GetBotInstance() bbinWails.BetClient {
+func GetBotInstance() bbinWails.ISport {
 	if bc == nil || !bc.LoginCheckIn() {
 		return nil
 	}

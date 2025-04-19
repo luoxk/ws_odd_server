@@ -142,12 +142,17 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			}
 
 			go func() {
-				res := proto.GetTicketsResponse{
-					MatchID: req.MatchID,
-					Odds:    []float64{1.88, 3.25, 4.10},
+				inst := models.GetBotInstance()
+				if v, ok := inst.(bbinWails.ISportTicket[*bbinWails.Yl_TicketsCache, *bbinWails.Yl_Ticket]); ok && inst != nil {
+					inst.GetTickets(req.Items)
+					res := proto.GetTicketsResponse{
+						MatchID: req.MatchID,
+						Result:  v,
+					}
+					resp, _ := proto.EncodeFrame(proto.OpcodeGetTickets, res, config.AESKey)
+					client.Send <- resp
 				}
-				resp, _ := proto.EncodeFrame(proto.OpcodeGetTickets, res, config.AESKey)
-				client.Send <- resp
+
 			}()
 		}
 	}

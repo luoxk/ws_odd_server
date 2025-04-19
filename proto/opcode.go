@@ -16,9 +16,10 @@ type SyncPayload struct {
 
 type GetTicketsRequest struct {
 	MatchID string
+	Items   []bbinWails.DataList
 }
 
 type GetTicketsResponse struct {
 	MatchID string
-	Odds    []float64
+	Result  any
 }

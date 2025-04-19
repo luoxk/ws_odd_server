@@ -2,6 +2,7 @@ package proto
 
 import (
 	"bytes"
+	"compress/gzip"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -59,25 +60,31 @@ func decryptAES_CBC(data, key, iv []byte) ([]byte, error) {
 // ==== 编码帧（包含随机 IV） ====
 
 func EncodeFrame(opcode uint16, payload any, key []byte) ([]byte, error) {
-	// gob 编码 payload
+	// gob 编码
 	var plainBuf bytes.Buffer
 	if err := gob.NewEncoder(&plainBuf).Encode(payload); err != nil {
 		return nil, err
 	}
 
-	// 生成随机 IV
+	// gzip 压缩
+	compressed, err := gzipCompress(plainBuf.Bytes())
+	if err != nil {
+		return nil, err
+	}
+
+	// 随机 IV
 	iv := make([]byte, aes.BlockSize)
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		return nil, err
 	}
 
-	// 加密数据
-	encrypted, err := encryptAES_CBC(plainBuf.Bytes(), key, iv)
+	// AES-CBC 加密
+	encrypted, err := encryptAES_CBC(compressed, key, iv)
 	if err != nil {
 		return nil, err
 	}
 
-	// 构造帧: [IV][Opcode][Length][EncryptedData]
+	// 构造最终帧：[IV][Opcode][Len][EncryptedData]
 	var frame bytes.Buffer
 	frame.Write(iv)
 	binary.Write(&frame, binary.BigEndian, opcode)
@@ -117,9 +124,40 @@ func ParseFrame(frame []byte) (*EncryptedFrame, error) {
 // ==== 解密 payload ====
 
 func DecodePayload(cipherData []byte, iv, key []byte, out any) error {
-	plain, err := decryptAES_CBC(cipherData, key, iv)
+	// AES 解密
+	plainCompressed, err := decryptAES_CBC(cipherData, key, iv)
 	if err != nil {
 		return err
 	}
-	return gob.NewDecoder(bytes.NewReader(plain)).Decode(out)
+
+	// GZIP 解压
+	plainData, err := gzipDecompress(plainCompressed)
+	if err != nil {
+		return err
+	}
+
+	// gob 解码
+	return gob.NewDecoder(bytes.NewReader(plainData)).Decode(out)
+}
+
+func gzipCompress(data []byte) ([]byte, error) {
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	if _, err := gz.Write(data); err != nil {
+		return nil, err
+	}
+	if err := gz.Close(); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func gzipDecompress(data []byte) ([]byte, error) {
+	reader, err := gzip.NewReader(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+	defer reader.Close()
+
+	return io.ReadAll(reader)
 }

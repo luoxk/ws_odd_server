@@ -70,7 +70,6 @@ require (
 	golang.org/x/tools v0.30.0 // indirect
 	gorm.io/driver/mysql v1.5.7 // indirect
 	gorm.io/gorm v1.25.12 // indirect
-	quic-proxy v0.0.0 // indirect
 	restys v1.0.0 // indirect
 )
 
@@ -78,7 +77,6 @@ replace (
 	bbinWails => ../../bbinWails
 	browsers => ../../browsers
 	github.com/luoxk/chromedp => ../chromedp
-	quic-proxy => ../quic-proxy
 	restys => ../restys
 	ws_server_599data => ../../599_ws_server
 )
