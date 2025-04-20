@@ -32,7 +32,10 @@ func main() {
 
 	instance := models.GetBotInstance()
 	if instance != nil {
-		//instance.GetBrowser().Close()
+		if instance.LoginCheckIn() {
+
+			instance.GetBrowser().Close()
+		}
 	}
 
 	http.HandleFunc("/ws", handler.HandleWebSocket)

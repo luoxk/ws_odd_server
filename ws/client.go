@@ -12,8 +12,11 @@ type Client struct {
 
 func StartWriter(c *Client) {
 	for msg := range c.Send {
-		if err := c.Conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
-			break
+		if msg != nil {
+			if err := c.Conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
+				break
+			}
 		}
+
 	}
 }

@@ -147,9 +147,13 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 					inst.GetTickets(req.Items)
 					res := proto.GetTicketsResponse{
 						MatchID: req.MatchID,
-						Result:  v,
+						Result:  v.TicketsCache(),
 					}
-					resp, _ := proto.EncodeFrame(proto.OpcodeGetTickets, res, config.AESKey)
+					resp, err := proto.EncodeFrame(proto.OpcodeGetTickets, res, config.AESKey)
+					if err != nil {
+						log.Println(err)
+						return
+					}
 					client.Send <- resp
 				}
 
