@@ -63,14 +63,18 @@ func startSyncTask() {
 		leagues := getLeagueInfo()
 
 		snapshotMu.Lock()
-		snapshotCache.Lists = lists
-		snapshotCache.Leagues = leagues
-		snapshotMu.Unlock()
+		if len(lists) > 0 {
+			snapshotCache.Lists = lists
+		}
+		if len(leagues) > 0 {
+			snapshotCache.Leagues = leagues
+		}
 
 		payload := proto.SyncPayload{
-			Lists:   lists,
-			Leagues: leagues,
+			Lists:   snapshotCache.Lists,
+			Leagues: snapshotCache.Leagues,
 		}
+		snapshotMu.Unlock()
 		resp, _ := proto.EncodeFrame(proto.OpcodeSyncData, payload, config.AESKey)
 		hub.Broadcast(resp)
 	}
