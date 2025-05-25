@@ -27,7 +27,7 @@ func init() {
 		}
 	}
 	if bc == nil {
-		bc = bbinWails.NewSportYongle2("", "", "", tugou)
+		bc = bbinWails.NewSportPandaYb("", "", "", tugou)
 	}
 
 	tugou.SetSport(bc)

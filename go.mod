@@ -1,4 +1,4 @@
-module ws_odd_server
+module github.com/luoxk/ws_odd_server
 
 go 1.23.4
 
@@ -11,7 +11,6 @@ require (
 )
 
 require (
-	browsers v1.0.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/PuerkitoBio/goquery v1.10.2 // indirect
 	github.com/agnivade/levenshtein v1.2.1 // indirect
@@ -62,7 +61,7 @@ require (
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac // indirect
 	golang.org/x/mod v0.23.0 // indirect
-	golang.org/x/net v0.35.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
@@ -70,13 +69,6 @@ require (
 	golang.org/x/tools v0.30.0 // indirect
 	gorm.io/driver/mysql v1.5.7 // indirect
 	gorm.io/gorm v1.25.12 // indirect
-	restys v1.0.0 // indirect
 )
 
-replace (
-	bbinWails => ../../bbinWails
-	browsers => ../../browsers
-	github.com/luoxk/chromedp => ../chromedp
-	restys => ../restys
-	ws_server_599data => ../../599_ws_server
-)
+replace bbinWails => ../../bbinWails

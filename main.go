@@ -3,13 +3,13 @@ package main
 import (
 	bbinWails "bbinWails/src"
 	"fmt"
+	"github.com/luoxk/ws_odd_server/handler"
+	"github.com/luoxk/ws_odd_server/models"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"ws_odd_server/handler"
-	"ws_odd_server/models"
 )
 
 func cleanup() {

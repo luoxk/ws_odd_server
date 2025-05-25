@@ -3,14 +3,14 @@ package handler
 import (
 	bbinWails "bbinWails/src"
 	"encoding/json"
+	"github.com/luoxk/ws_odd_server/config"
+	"github.com/luoxk/ws_odd_server/models"
+	"github.com/luoxk/ws_odd_server/proto"
+	"github.com/luoxk/ws_odd_server/ws"
 	"log"
 	"net/http"
 	"sync"
 	"time"
-	"ws_odd_server/config"
-	"ws_odd_server/models"
-	"ws_odd_server/proto"
-	"ws_odd_server/ws"
 )
 
 var (
